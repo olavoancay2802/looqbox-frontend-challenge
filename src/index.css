@@ -1,0 +1,98 @@
+body {
+  background: #efefbb;
+  background: linear-gradient(to right, rgb(255, 155, 155), rgb(93, 114, 185));
+  color: white;
+  margin: 0;
+}
+
+.container {
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  font-size: 54px;
+}
+
+.searchBar {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  border-radius: 10px;
+}
+
+.pokedex {
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-gap: 30px;
+  padding-inline-start: 0;
+}
+
+.cardContainer {
+  transition: all 1s ease;
+  transform-style: preserve-3d;
+  display: grid;
+  text-align: center;
+  color: black;
+}
+
+.list {
+  list-style: none;
+}
+
+.front {
+  grid-area: 1/1;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 20px;
+  background-color: #f1f1f1;
+}
+
+.back {
+  grid-area: 1/1;
+  background-color: #f1f1f1;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.btnViewMore:checked ~ .cardContainer {
+  transform: rotateY(180deg);
+}
+
+.cardContainer:hover {
+  transform: rotateY(180deg);
+}
+
+.card-title {
+  text-transform: capitalize;
+  margin-bottom: 10px;
+  font-size: 32px;
+  font-weight: normal;
+}
+.card-subtitle {
+  margin-top: 5px;
+  color: #666;
+  font-weight: lighter;
+}
+
+.card-image {
+  height: 120px;
+}
+
+@keyframes bounce {
+  20% {
+    transform: translateY(-6px);
+  }
+  40% {
+    transform: translateY(0px);
+  }
+
+  80% {
+    transform: translateY(-2px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
