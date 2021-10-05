@@ -1,66 +1,52 @@
-import logo from "./pokeball.svg";
+import pokemonService from "./services.js"
+import pokeball from "./pokeball.svg";
 import React from "react";
 
-const getPokemonUrl = (pagingFilter) =>
-  `https://pokeapi.co/api/v2/pokemon?${pagingFilter}`;
+function generateBasicHTML(pokemons) {
+  const cards = [];
 
-const pokemonCount = fetch(getPokemonUrl()).then((response) =>
-  Promise.any([response.json()])
+  pokemons.forEach((pokemon) => {
+    cards +=
+      `<div class="card">
+      <div class="cardContainer">
+        <div class="front">
+          <li class="list">
+            <img class="card-image" src=${pokeball}>  
+            <h2 class="card-title">${pokemon.name}</h2>
+            <button type="button" class="btn btn-primary btnViewMore" onclick="viewMore()">View More</button>
+          </li>
+        </div>
+      </div>
+    </div>`;
 
-  return response.json().count
-);
+    return cards;
+  }, '');
+}
 
-console.log(pokemonCount);
+function generatePokemonCardDetailedView(pokemon) {
+  const types = pokemon.types.map((typeInfo) => typeInfo.type.name);
 
-const getPokemonByIdOrNameUrl = (idOrName) =>
-  `https://pokeapi.co/api/v2/pokemon/${idOrName}`;
-
-const generatePokemonPromises = () =>
-  Array(150)
-    .fill()
-    .map((_, index) =>
-      fetch(getPokemonByIdOrNameUrl(index + 1)).then((response) =>
-        response.json()
-      )
-    );
-
-const generateHTML = (pokemons) =>
-  pokemons.reduce((accumulator, { name, id, types }) => {
-    const elementTypes = types.map((typeInfo) => typeInfo.type.name);
-
-    accumulator += `
-
-  <div class="card ${elementTypes[0]}">
-    <div class="cardContainer ">
-      <div class="front">
-        <li class="list">
-          <h2 class="card-title">#${id.toString().padStart(3, "0")}</h2>
-          <img class="card-image" alt="${name}" src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/${id
-      .toString()
-      .padStart(3, "0")}.png">  
-          <h2 class="card-title">${name}</h2>
-          <p class="card-subtitle">${elementTypes.join(" | ")}</p>
+  const card =
+    `<li class="card">
+        <img class="card-image" alt="${pokemon.name}" src="${pokemon.sprites.other.official_artwork}">  
+          <h2 class="card-title">${pokemon.name}</h2>
+          <p class="card-subtitle">${types.join(" | ")}</p>
           <button type="button" class="btn btn-primary btnViewMore" onclick="viewMore()">View More</button>
-        </li>
-      </div>
-      <div class="back">
-        <h2>Abilities:</h2>
-        <h2>Stats:</h2>
-      </div>
-    </div>
-  </div>`;
+      </li>`;
 
-    return accumulator;
-  }, "");
+  return card;
+}
 
-const insertPokemonIntoPage = (pokemons) => {
+function insertPokemonsIntoPage (html) {
   const ul = document.querySelector('[data-js="pokedex"]');
-  ul.innerHTML = pokemons;
+  ul.innerHTML = html;
 };
 
-const pokemonPromises = generatePokemonPromises();
+const pokemonCount = pokemonService.getPokemonCount();
+const pokemons = pokemonService.getPokemons(`limit=${pokemonCount}`);
+const basicHTML = generateBasicHTML(pokemons)
 
-Promise.all(pokemonPromises).then(generateHTML).then(insertPokemonIntoPage);
+insertPokemonsIntoPage(basicHTML);
 
 //function viewMore() {
 //  document.querySelector(div.btnViewMore);
